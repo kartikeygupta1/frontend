@@ -1,6 +1,7 @@
 'use client';
 import { useFormik } from 'formik';
 import React from 'react'
+import toast from 'react-hot-toast';
 
 const UploadPost = () => {
 
@@ -14,7 +15,7 @@ const UploadPost = () => {
         onSubmit: (values) => {
 
             //making a request to bankend server
-            fetch('http://localhost:5000/post/add', {
+            fetch('http://localhost:5000/user/add', {
                 method: 'POST',
                 body: JSON.stringify(values),
                 headers:{
@@ -23,8 +24,10 @@ const UploadPost = () => {
             })
             .then((response) => {
                 console.log(response.status);
+                toast.success('Post Created Successfully')
             }).catch((err) => {
                 console.log(err);
+                toast.error('Something Went Wrong')
             });
             
             console.log(values);
