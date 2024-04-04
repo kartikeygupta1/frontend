@@ -18,22 +18,52 @@ const UploadPost = () => {
             fetch('http://localhost:5000/user/add', {
                 method: 'POST',
                 body: JSON.stringify(values),
-                headers:{
-                    'Content-Type' : 'application/json'
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
-            .then((response) => {
-                console.log(response.status);
-                toast.success('Post Created Successfully')
-            }).catch((err) => {
-                console.log(err);
-                toast.error('Something Went Wrong')
-            });
-            
+                .then((response) => {
+                    console.log(response.status);
+                    toast.success('Post Created Successfully')
+                }).catch((err) => {
+                    console.log(err);
+                    toast.error('Something Went Wrong')
+                });
+
             console.log(values);
         }
     })
 
+
+
+    const uploadFile = (e) => {
+
+        const file = e.target.files[0];
+        console.log(file);
+
+        const fd = new FormData();
+        fd.append('myfile', file);
+
+        fetch('http://localhost:5000/util/uploadFile', {
+            method: 'POST',
+            body: fd
+        })
+            .then((response) => {
+                if (response.status === 200){
+                
+                    toast.success('file uploaded')
+                    response.json()
+                    .then((data) => {
+                        postForm.values.image = data.savedFile;
+                    })
+                }else{
+                        toast.error('Some Error Occurred')
+                    }
+            }).catch((err) => {
+                console.log(err);
+                toast.error('Some Error Occured')
+            });
+    }
     return (
         <div>
             <div className="container">
@@ -90,10 +120,8 @@ const UploadPost = () => {
                                     <div class="mb-3">
                                         <label for="" class="form-label">Image</label>
                                         <input
-                                            type="text"
-                                            id="image"
-                                            onChange={postForm.handleChange}
-                                            value={postForm.values.image}
+                                            type="file"
+                                            onChange={uploadFile}
                                             class="form-control"
                                             placeholder=""
                                         />
